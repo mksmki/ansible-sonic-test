@@ -1,0 +1,12 @@
+---
+- name: SONiC SNMP Community settings
+  hosts: datacenter
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+
+  tasks:
+    - name: "Configure SNMP community for SONiC device along with 'save'"
+      dellemc.enterprise_sonic.sonic_config:
+        commands:
+          - snmp-server community public group ro
+        save: true

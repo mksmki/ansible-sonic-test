@@ -1,0 +1,24 @@
+---
+- name: Ansible resource module facts example
+  hosts: datacenter
+  gather_facts: false
+  connection: ansible.netcommon.httpapi
+
+  # connection: httpapi
+  # collections:
+  #   - dellemc.enterprise_sonic
+
+  tasks:
+    - name: "Gather facts"
+      dellemc.enterprise_sonic.sonic_facts:
+        gather_subset:
+          - "!config"
+        gather_network_resources:
+          # - all
+          # - vlans
+          - interfaces
+      register: result
+
+    - name: "Debug facts"
+      ansible.builtin.debug:
+        msg: "{{ result }}"

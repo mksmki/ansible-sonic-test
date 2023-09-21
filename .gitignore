@@ -3,3 +3,5 @@
 .venv
 .bash_history
 .ssh
+
+ansible.log

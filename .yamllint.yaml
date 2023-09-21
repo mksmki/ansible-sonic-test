@@ -1,0 +1,14 @@
+---
+extends: default
+
+rules:
+  # line-length: disable
+  line-length:
+    max: 120
+    level: warning
+    allow-non-breakable-inline-mappings: true
+
+  # Don't fail if there is more than one empty line
+  empty-lines:
+    max: 1
+    level: warning

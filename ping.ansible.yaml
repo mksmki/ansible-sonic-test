@@ -1,0 +1,12 @@
+---
+- name: SONiC Test Connection
+  hosts: datacenter
+  # connection: network_cli
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+  # collections:
+  #    - dellemc.enterprise_sonic
+
+  tasks:
+    - name: PING
+      ansible.builtin.ping:
