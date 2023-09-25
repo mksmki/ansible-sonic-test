@@ -1,0 +1,87 @@
+Started by user Admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on NETWORKER1 in /data/jenkins-net1/workspace/Ansible Automation Test
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Repository checkout)
+[Pipeline] echo
+Cloning Git repository https://github.com/mksmki/ansible-simple-tests
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+Fetching changes from the remote Git repository
+Checking out Revision 96cf16ac496e6ddeb560cfe9bfd5347b120a0f4d (refs/remotes/origin/master)
+Commit message: "Add simple JSON tests"
+ > git rev-parse --resolve-git-dir /data/jenkins-net1/workspace/Ansible Automation Test/.git # timeout=10
+ > git config remote.origin.url https://github.com/mksmki/ansible-simple-tests # timeout=10
+Fetching upstream changes from https://github.com/mksmki/ansible-simple-tests
+ > git --version # timeout=10
+ > git --version # 'git version 2.34.1'
+ > git fetch --tags --force --progress -- https://github.com/mksmki/ansible-simple-tests +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 96cf16ac496e6ddeb560cfe9bfd5347b120a0f4d # timeout=10
+ > git rev-list --no-walk c2ad583662fad8c2d78fa47c414d5df008a6909f # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Check Ansible version)
+[Pipeline] echo
+Running docker image quay.io/mksmki/network-ee:2.2.2
+[Pipeline] sh
++ docker run --rm quay.io/mksmki/network-ee:2.2.2 ansible --version
+[Pipeline] echo
+ansible [core 2.15.4]
+  config file = None
+  configured module search path = ['/runner/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.9/site-packages/ansible
+  ansible collection location = /runner/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible
+  python version = 3.9.16 (main, May 29 2023, 00:00:00) [GCC 11.3.1 20221121 (Red Hat 11.3.1-4)] (/usr/bin/python3.9)
+  jinja version = 3.1.2
+  libyaml = True
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Ansible Tests)
+[Pipeline] sh
++ docker run --rm -v ./:/runner:ro quay.io/mksmki/network-ee:2.2.2 ansible-playbook main.ansible.yaml
+
+PLAY [Simple Tests for Ansible] ************************************************
+
+TASK [Run Basic Tests] *********************************************************
+included: /runner/basic.ansible.yaml for localhost
+
+TASK [Ping localhost] **********************************************************
+ok: [localhost]
+
+TASK [Print Ansible version] ***************************************************
+ok: [localhost] => {
+    "msg": "Running Ansible 2.15"
+}
+
+TASK [Run JSON Tests] **********************************************************
+included: /runner/json.ansible.yaml for localhost
+
+TASK [JSON | Set Test Value] ***************************************************
+ok: [localhost]
+
+TASK [JSON | Parse string value to data structure] *****************************
+ok: [localhost]
+
+TASK [JSON | Validate test values] *********************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
