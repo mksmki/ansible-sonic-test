@@ -1,7 +1,10 @@
+# directories
 .ansible
 .vscode
 .venv
 .bash_history
 .ssh
+.cache
 
+# files
 ansible.log

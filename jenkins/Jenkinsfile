@@ -1,0 +1,43 @@
+// Simple pipeline to run network-ee container
+// Tested using Jenkins 2.414.2
+
+def git_repo_url="https://github.com/mksmki/ansible-simple-tests"
+def docker_image="quay.io/mksmki/network-ee:2.2.2"
+
+node ("network-ee") {
+    stage ("Repository checkout") {
+        echo "Cloning Git repository ${git_repo_url}"
+        checkout (
+            scmGit(userRemoteConfigs: [
+                [ url: "${git_repo_url}" ]
+            ])
+        )
+    }
+
+    stage ("Check Ansible version") {
+        echo "Running docker image ${docker_image}"
+
+        ansible_version = sh (
+            script: """
+                docker run --rm ${docker_image} ansible --version
+            """,
+            returnStdout: true
+        ).trim()
+
+        echo "${ansible_version}"
+    }
+
+    stage ("Run Ansible Tests") {
+        sh (
+            script: """
+                docker \
+                    run \
+                    --rm \
+                    -v ./:/runner:ro \
+                    ${docker_image} \
+                    ansible-playbook main.ansible.yaml
+            """
+        )
+    }
+
+}
